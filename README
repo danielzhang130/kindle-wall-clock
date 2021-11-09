@@ -2,5 +2,9 @@ Kindle wall clock
 
 Tested on Kindle Basic (7th Generation)
 
-ecobee optional for indoor temperature
-
+Requirements:
+- PHP 7
+- Guzzle Http client
+- weatherapi.com api key
+- ecobee api key (authorization code) for indoor temperature
+- know how to read an analog clock without hour marks
