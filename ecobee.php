@@ -3,15 +3,18 @@ require 'vendor/autoload.php';
 
 use GuzzleHttp\Client;
 
-function indoor_temp() {
-    return f2c(get_response()["thermostatList"][0]["remoteSensors"][2]["capability"][0]["value"]/10);
+function indoor_temp()
+{
+    return f2c(get_response()["thermostatList"][0]["remoteSensors"][2]["capability"][0]["value"] / 10);
 }
 
-function f2c($f) {
-    return round(($f-32)/1.8, 1);
+function f2c($f)
+{
+    return round(($f - 32) / 1.8, 1);
 }
 
-function get_response() {
+function get_response()
+{
     require 'constants.php';
 
     $client = new Client([
@@ -23,7 +26,7 @@ function get_response() {
         [
             'headers' => [
                 'Content-Type' => 'application/json;charset=UTF-8',
-                'Authorization' => 'Bearer '.$app
+                'Authorization' => 'Bearer ' . $app
             ],
             'http_errors' => false
         ]
@@ -43,7 +46,8 @@ function get_response() {
     return $data;
 }
 
-function refresh() {
+function refresh()
+{
     require 'constants.php';
 
     $client = new Client([
@@ -70,4 +74,5 @@ function refresh() {
     $file = "<?php \$key = '$key';\n\$refresh = '$refresh_token'; \n\$app = '$access_token';\n?>\n";
     file_put_contents('constants.php', $file);
 }
+
 ?>

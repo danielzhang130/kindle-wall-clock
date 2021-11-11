@@ -16,6 +16,11 @@ $response = $client->get(
     ]
 );
 
+if ($response->getStatusCode() !== 200) {
+    http_response_code(500);
+    return;
+}
+
 $data = json_decode($response->getBody()->getContents(), true);
 
 $result = [];
@@ -26,8 +31,8 @@ $result['sec'] = intval(date('s', $data['location']['localtime_epoch']));
 
 $result['current'] = [];
 $result['current']['temperature'] = $data['current']['temp_c'];
-$result['current']['icon'] = '/weather'.
-    ($data['current']['is_day'] === 1 ? '/day' : '/night').
+$result['current']['icon'] = '/weather' .
+    ($data['current']['is_day'] === 1 ? '/day' : '/night') .
     str_replace('png', 'jpg', strrchr($data['current']['condition']['icon'], '/'));
 $result['current']['feelslike'] = $data['current']['feelslike_c'];
 
@@ -44,8 +49,8 @@ foreach ($data['forecast']['forecastday'] as $day) {
             array_push($result['hour'], [
                 'time' => date('G', $hour['time_epoch']),
                 'temperature' => $hour['temp_c'],
-                'icon' => '/weather'.
-                    ($hour['is_day'] === 1 ? '/day' : '/night').
+                'icon' => '/weather' .
+                    ($hour['is_day'] === 1 ? '/day' : '/night') .
                     str_replace('png', 'jpg', strrchr($hour['condition']['icon'], '/')),
             ]);
             $hour_count++;
@@ -63,13 +68,18 @@ foreach ($data['forecast']['forecastday'] as $day) {
         'time' => $date->format('D'),
         'high' => $day['day']['maxtemp_c'],
         'low' => $day['day']['mintemp_c'],
-        'icon' => '/weather/day'.
+        'icon' => '/weather/day' .
             str_replace('png', 'jpg', strrchr($day['day']['condition']['icon'], '/')),
     ]);
 }
 
-require('ecobee.php');
-$result['current']['indoor'] = indoor_temp();
+try {
+    require('ecobee.php');
+    $result['current']['indoor'] = indoor_temp();
+} catch (Exception $ex) {
+    http_response_code(500);
+    return;
+}
 
 print(json_encode($result));
 ?>
