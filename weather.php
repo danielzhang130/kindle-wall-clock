@@ -25,10 +25,6 @@ $data = json_decode($response->getBody()->getContents(), true);
 
 $result = [];
 
-$result['hr'] = intval(date('G', $data['location']['localtime_epoch']));
-$result['min'] = intval(date('i', $data['location']['localtime_epoch']));
-$result['sec'] = intval(date('s', $data['location']['localtime_epoch']));
-
 $result['current'] = [];
 $result['current']['temperature'] = $data['current']['temp_c'];
 $result['current']['icon'] = '/weather' .
@@ -80,6 +76,10 @@ try {
     http_response_code(500);
     return;
 }
+
+$result['hr'] = intval(date('G', $data['location']['localtime_epoch']));
+$result['min'] = intval(date('i', $data['location']['localtime_epoch']));
+$result['sec'] = intval(date('s', $data['location']['localtime_epoch']));
 
 print(json_encode($result));
 ?>
