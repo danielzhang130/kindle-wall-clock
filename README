@@ -8,3 +8,5 @@ Requirements:
 - weatherapi.com api key
 - ecobee api key (authorization code) for indoor temperature
 - know how to read an analog clock without hour marks
+
+Disable screensaver: type "~ds" in search bar
